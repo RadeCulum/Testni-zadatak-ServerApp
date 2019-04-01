@@ -1,60 +1,45 @@
 const bodyParser = require('body-parser');
 const request = require('sync-request');
 
-var fetchRandomCities = function(){
-  var cities = [];
-  var weather_list = [];
-  while(weather_list.length != 10){
-    var citiCounter = 0;
-    var lat = (Math.random() * 180.0) - 90;
-    var lon = (Math.random() * 360.0) - 180;
+const properties = require('./properties.js');
+const util = require('./util.js');
 
-    console.log(lat, lon);
-    var apiKey = '2b031a981aeb27fba4e3bce57b347e33';
-    var url = 'http://api.openweathermap.org/data/2.5/find?lat=' + lat + '&lon=' + lon + '&cnt=10&units=metric&appid=' + apiKey;
+var fetchRandomCities = ()=> {
+  let cities = [];
+  let weatherList = [];
+  while(weatherList.length != 10){
+    let citiCounter = 0;
+    let lat = (Math.random() * 180.0) - 90;
+    let lon = (Math.random() * 360.0) - 180;
+    let url = util.contructUrlWithLatAndLon(lat, lon);
 
-    var weather_json = JSON.parse(request('GET', url).body);
-      weather_list = weather_json.list;
+    let weatherJson = JSON.parse(request('GET', url).body);
+    weatherList = weatherJson.list;
   }
-  var cod = weather_json.cod;
-  var i = 0;
-
-  weather_list.forEach(function(element){
-    var weather = {
-      city : element.name,
-        temperature: Math.round(element.main.temp),
-        description: element.weather[0].description,
-        pressure: element.main.pressure,
-				windSpeed: element.wind.speed,
-        temp_min: Math.round(element.main.temp_min),
-        temp_max: Math.round(element.main.temp_max)
-      };
-      cities[i] = weather;
+  let i = 0;
+  weatherList.forEach((element)=> {
+      cities[i] = util.parseToMyWeatherFormat(element);
       i++;
     });
-    console.log("Pokupio podatke");
     return cities;
   };
 
-  var fetchCityByName = function(cityName){
-    console.log('Trazim grad...');
-    var apiKey = '2b031a981aeb27fba4e3bce57b347e33';
-    var url = 'http://api.openweathermap.org/data/2.5/weather?q=' + cityName + '&units=metric&appid=' + apiKey;
-
-    var weather_json = JSON.parse(request('GET', url).body)
-    if(weather_json.cod === '404'){
+  var fetchCityByName = (cityName)=> {
+    let url = util.constructUrlWithCityName(cityName);
+    let weatherJson = JSON.parse(request('GET', url).body)
+    if(weatherJson.cod === '404'){
       return {cod: '404', wether: '' };
     }
     else{
-      var weather = {
+      let weather = {
         city : cityName,
-        temperature: Math.round(weather_json.main.temp),
-        description: weather_json.weather[0].description,
-        pressure: weather_json.main.pressure,
-        temp_min: Math.round(weather_json.main.temp_min),
-        temp_max: Math.round(weather_json.main.temp_max)
+        temperature: Math.round(weatherJson.main.temp),
+        description: weatherJson.weather[0].description,
+        pressure: weatherJson.main.pressure,
+        windSpeed: weatherJson.wind.speed,
+        temp_min: Math.round(weatherJson.main.temp_min),
+        temp_max: Math.round(weatherJson.main.temp_max)
         };
-        var weather_data = {weather : weather};
         return {cod: '200', weather: weather};
     }
   }

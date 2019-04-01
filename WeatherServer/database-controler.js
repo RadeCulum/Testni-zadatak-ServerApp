@@ -1,49 +1,70 @@
 const  MongoClient = require('mongodb');
 
 const  dataFetcher = require('./data-fetcher');
+const properties = require('./properties');
 
-const dbUrl = "mongodb://localhost:27017/WeatherDB";
+const dbUrl = properties.databaserUrl;
 
-var insertCitiesIfDatabaseDoesEmty = async function(){
+var insertCitiesIfDatabaseDoesEmty = async ()=> {
   let client = await MongoClient.connect(dbUrl, { useNewUrlParser: true });
   let db = await client.db();
-  var counter = await db.collection('cities').countDocuments();
+  let counter = await db.collection('cities').countDocuments();
 
-  if(counter== 0){
+  if(!counter){
     cities = dataFetcher.fetchRandomCities();
-    console.log('Baza je prazna');
     cities.forEach(function(citi){
-      db.collection("cities").insertOne(citi, function(err, res) {
+      db.collection("cities").insertOne(citi, (err, res)=> {
         if (err) throw err;
       });
     });
-  }else{
-    console.log('Broj elemenata je ' + counter);
   }
-    client.close();
+  client.close();
 }
 
-var getAllCities = async function(){
+var getAllCities = async ()=> {
   let client = await MongoClient.connect(dbUrl, { useNewUrlParser: true });
   let db = await client.db();
-  var cities = [];
+  let cities = [];
   let cursor = await db.collection('cities').find({});
-  await cursor.forEach(await function(element, err){
+  await cursor.forEach((element, err)=> {
     cities.push(element);
   });
   client.close();
   return cities;
 }
 
-var addCity = async function(city){
+var addCity = async (city)=> {
   let client = await MongoClient.connect(dbUrl, { useNewUrlParser: true });
   let db = await client.db();
-  db.collection("cities").insertOne(city, function(err, res) {
-    if (err) throw err;
+  db.collection("cities").insertOne(city, (err, res)=> {
+    if (err) {
+      throw err;
+    }
   });
-  db.close();
+  client.close();
+}
+
+var updateDatabase = async ()=> {
+  let client = await MongoClient.connect(dbUrl, { useNewUrlParser: true });
+  let db = await client.db();
+  let cities = [];
+  let cursor = await db.collection('cities').find({});
+  await cursor.forEach(async (element, err)=> {
+    let currentValue = { city : element.city };
+    console.log('Trazim grad ' + element.city);
+    let newDocument = await dataFetcher.fetchCityByName(element.city);
+    console.log('Nasao grad ' + newDocument.weather.city);
+    db.collection('cities').updateOne(element, { $set: newDocument.weather }, (err, res)=> {
+      if (err){
+        throw err;
+      }
+      console.log('  Update ' + element.city);
+    })
+  });
+  client.close();
 }
 
 module.exports.insertCitiesIfDatabaseDoesEmty = insertCitiesIfDatabaseDoesEmty;
 module.exports.getAllCities = getAllCities;
 module.exports.addCity = addCity;
+module.exports.updateDatabase = updateDatabase;
