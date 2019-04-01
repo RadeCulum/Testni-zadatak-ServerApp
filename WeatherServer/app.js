@@ -15,12 +15,10 @@ app.use(cors());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 setInterval(function(){
-	console.log('Update');
 	databaseControler.updateDatabase();
 }, properties.updateInterval);
 
 app.listen(port, function(){
-	console.log('Running');
 	databaseControler.insertCitiesIfDatabaseDoesEmty();
 });
 

@@ -51,14 +51,11 @@ var updateDatabase = async ()=> {
   let cursor = await db.collection('cities').find({});
   await cursor.forEach(async (element, err)=> {
     let currentValue = { city : element.city };
-    console.log('Trazim grad ' + element.city);
     let newDocument = await dataFetcher.fetchCityByName(element.city);
-    console.log('Nasao grad ' + newDocument.weather.city);
     db.collection('cities').updateOne(element, { $set: newDocument.weather }, (err, res)=> {
       if (err){
         throw err;
       }
-      console.log('  Update ' + element.city);
     })
   });
   client.close();
