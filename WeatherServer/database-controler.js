@@ -1,6 +1,6 @@
-const var MongoClient = require('mongodb');
+const  MongoClient = require('mongodb');
 
-const var dataFetcher = require('./data-fetcher');
+const  dataFetcher = require('./data-fetcher');
 
 const dbUrl = "mongodb://localhost:27017/WeatherDB";
 

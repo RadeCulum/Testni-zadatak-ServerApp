@@ -12,6 +12,10 @@ const port = 3000;
 app.use(cors());
 app.use(bodyParser.urlencoded({ extended: true }));
 
+setInterval(function(){
+	console.log('Database update...');
+}, 3000);
+
 app.listen(port, function(){
 	databaseControler.insertCitiesIfDatabaseDoesEmty();
 	console.log('Nastavio sam dalje');
