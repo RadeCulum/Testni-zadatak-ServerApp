@@ -1,12 +1,11 @@
-var express = require('express');
-var bodyParser = require('body-parser');
-var cors = require('cors')
+const express = require('express');
+const bodyParser = require('body-parser');
+const cors = require('cors')
 
-var databaseControler = require('./database-controler');
-var dataFetcher = require('./data-fetcher');
+const databaseControler = require('./database-controler');
+const dataFetcher = require('./data-fetcher');
 
-var app = express();
-var router = express.Router();
+const app = express();
 
 const port = 3000;
 
@@ -26,15 +25,15 @@ app.get('/api/cities', async function(req, res, next){
 	next();
 })
 
-app.post('/api/add', async function(req, res, next){
+app.post('/api/city/add', async function(req, res, next){
 	console.log(req.url + '  ' + req.method);
 	var response = dataFetcher.fetchCityByName(req.body.city);
 	if(response.cod === '404'){
-		console.log('Gad nije nadjen................');
+		console.log('Gad nije nadjen...');
 		res.status('404');
 	}
 	else if(response.cod === '200'){
-		console.log('Gad je nadjen................');
+		console.log('Gad je nadjen...');
 		databaseControler.addCity(response.weather);
 		res.status(200).json(response.weather);
 	}

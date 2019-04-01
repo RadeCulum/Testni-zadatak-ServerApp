@@ -1,8 +1,8 @@
-var MongoClient = require('mongodb');
+const var MongoClient = require('mongodb');
 
-var dataFetcher = require('./data-fetcher');
+const var dataFetcher = require('./data-fetcher');
 
-var dbUrl = "mongodb://localhost:27017/WeatherDB";
+const dbUrl = "mongodb://localhost:27017/WeatherDB";
 
 var insertCitiesIfDatabaseDoesEmty = async function(){
   let client = await MongoClient.connect(dbUrl, { useNewUrlParser: true });
@@ -15,7 +15,6 @@ var insertCitiesIfDatabaseDoesEmty = async function(){
     cities.forEach(function(citi){
       db.collection("cities").insertOne(citi, function(err, res) {
         if (err) throw err;
-        console.log("1 document inserted");
       });
     });
   }else{
@@ -37,12 +36,10 @@ var getAllCities = async function(){
 }
 
 var addCity = async function(city){
-  console.log('Dodaje grad................');
   let client = await MongoClient.connect(dbUrl, { useNewUrlParser: true });
   let db = await client.db();
   db.collection("cities").insertOne(city, function(err, res) {
     if (err) throw err;
-    console.log("1 document inserted");
   });
   db.close();
 }

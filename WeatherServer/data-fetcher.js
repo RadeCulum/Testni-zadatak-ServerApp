@@ -1,5 +1,5 @@
 const bodyParser = require('body-parser');
-var request = require('sync-request');
+const request = require('sync-request');
 
 var fetchRandomCities = function(){
   var cities = [];
@@ -29,7 +29,6 @@ var fetchRandomCities = function(){
         temp_min: Math.round(element.main.temp_min),
         temp_max: Math.round(element.main.temp_max)
       };
-      //console.log(weather);
       cities[i] = weather;
       i++;
     });
@@ -38,7 +37,7 @@ var fetchRandomCities = function(){
   };
 
   var fetchCityByName = function(cityName){
-    console.log('Trazim grad................');
+    console.log('Trazim grad...');
     var apiKey = '2b031a981aeb27fba4e3bce57b347e33';
     var url = 'http://api.openweathermap.org/data/2.5/weather?q=' + cityName + '&units=metric&appid=' + apiKey;
 
