@@ -15,8 +15,8 @@ var parseToMyWeatherFormat = (openWeatherObject)=> {
       description: openWeatherObject.weather[0].description,
       pressure: openWeatherObject.main.pressure,
       windSpeed: openWeatherObject.wind.speed,
-      temp_min: Math.round(openWeatherObject.main.temp_min),
-      temp_max: Math.round(openWeatherObject.main.temp_max)
+      tempMin: Math.round(openWeatherObject.main.temp_min),
+      tempMax: Math.round(openWeatherObject.main.temp_max)
     };
 }
 

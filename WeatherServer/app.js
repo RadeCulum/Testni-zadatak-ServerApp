@@ -31,7 +31,7 @@ app.get(properties.getCitiesRoute, async function(req, res, next){
 app.post(properties.addCityRoute, async function(req, res, next){
 	let response = dataFetcher.fetchCityByName(req.body.city);
 	if(response.cod === '404'){
-		res.status('404');
+		res.status('404').json({});
 	}
 	else if(response.cod === '200'){
 		databaseControler.addCity(response.weather);

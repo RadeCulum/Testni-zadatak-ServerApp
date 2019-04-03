@@ -31,16 +31,8 @@ var fetchRandomCities = ()=> {
       return {cod: '404', wether: '' };
     }
     else{
-      let weather = {
-        city : cityName,
-        temperature: Math.round(weatherJson.main.temp),
-        description: weatherJson.weather[0].description,
-        pressure: weatherJson.main.pressure,
-        windSpeed: weatherJson.wind.speed,
-        temp_min: Math.round(weatherJson.main.temp_min),
-        temp_max: Math.round(weatherJson.main.temp_max)
-        };
-        return {cod: '200', weather: weather};
+      let weather = util.parseToMyWeatherFormat(weatherJson);
+      return {cod: '200', weather: weather};
     }
   }
 
