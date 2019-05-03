@@ -5,14 +5,14 @@ const properties = require('./properties');
 
 const dbUrl = properties.databaserUrl;
 
-var insertCitiesIfDatabaseDoesEmty = async ()=> {
+let insertCitiesIfDatabaseDoesEmty = async () => {
   let client = await MongoClient.connect(dbUrl, { useNewUrlParser: true });
   let db = await client.db();
   let counter = await db.collection('cities').countDocuments();
 
   if(!counter){
     cities = dataFetcher.fetchRandomCities();
-    cities.forEach(function(citi){
+    cities.forEach((citi) => {
       db.collection("cities").insertOne(citi, (err, res)=> {
         if (err) throw err;
       });
@@ -21,7 +21,7 @@ var insertCitiesIfDatabaseDoesEmty = async ()=> {
   client.close();
 }
 
-var getAllCities = async ()=> {
+let getAllCities = async () => {
   let client = await MongoClient.connect(dbUrl, { useNewUrlParser: true });
   let db = await client.db();
   let cities = [];
@@ -33,10 +33,10 @@ var getAllCities = async ()=> {
   return cities;
 }
 
-var addCity = async (city)=> {
+let addCity = async (city) => {
   let client = await MongoClient.connect(dbUrl, { useNewUrlParser: true });
   let db = await client.db();
-  db.collection("cities").insertOne(city, (err, res)=> {
+  db.collection("cities").insertOne(city, (err, res) => {
     if (err) {
       throw err;
     }
@@ -44,7 +44,7 @@ var addCity = async (city)=> {
   client.close();
 }
 
-var updateDatabase = async ()=> {
+let updateDatabase = async ()=> {
   let client = await MongoClient.connect(dbUrl, { useNewUrlParser: true });
   let db = await client.db();
   let cities = [];

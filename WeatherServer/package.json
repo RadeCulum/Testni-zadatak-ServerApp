@@ -15,6 +15,7 @@
     "express": "^4.16.4",
     "mongodb": "^3.2.2",
     "request": "^2.88.0",
+    "simple-node-logger": "^18.12.22",
     "sync-request": "^6.1.0"
   }
 }

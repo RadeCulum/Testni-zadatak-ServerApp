@@ -14,11 +14,11 @@ const port = properties.port;
 app.use(cors());
 app.use(bodyParser.urlencoded({ extended: true }));
 
-setInterval(function(){
+setInterval( () => {
 	databaseControler.updateDatabase();
 }, properties.updateInterval);
 
-app.listen(port, function(){
+app.listen(port, () => {
 	databaseControler.insertCitiesIfDatabaseDoesEmty();
 });
 
@@ -28,7 +28,7 @@ app.get(properties.getCitiesRoute, async function(req, res, next){
 	next();
 })
 
-app.post(properties.addCityRoute, async function(req, res, next){
+app.post(properties.addCityRoute, async (req, res, next) => {
 	let response = dataFetcher.fetchCityByName(req.body.city);
 	if(response.cod === '404'){
 		res.status('404').json({});
