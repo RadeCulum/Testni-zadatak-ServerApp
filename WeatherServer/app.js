@@ -19,7 +19,7 @@ setInterval( () => {
 }, properties.updateInterval);
 
 app.listen(port, () => {
-	databaseControler.insertCitiesIfDatabaseDoesEmty();
+	databaseControler.insertCitiesIfDatabaseDoesEmpty();
 });
 
 app.get(properties.getCitiesRoute, async function(req, res, next){

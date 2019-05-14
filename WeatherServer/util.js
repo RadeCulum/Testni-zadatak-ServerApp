@@ -1,7 +1,7 @@
 const properties = require('./properties.js');
 
-let contructUrlWithLatAndLon = (lat, lon) => {
-    return properties.openWeatherUrl + '/data/2.5/find?lat=' + lat + '&lon=' + lon + '&cnt=10&units=metric&appid=' + properties.apiKey;
+let contructUrlWithLatAndLon = (lat, lon, num ) => {
+    return properties.openWeatherUrl + '/data/2.5/find?lat=' + lat + '&lon=' + lon + '&cnt=' + num + '&units=metric&appid=' + properties.apiKey;
 }
 
 let constructUrlWithCityName = (cityName) => {

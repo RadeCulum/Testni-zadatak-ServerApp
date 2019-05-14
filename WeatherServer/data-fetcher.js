@@ -4,14 +4,15 @@ const request = require('sync-request');
 const properties = require('./properties.js');
 const util = require('./util.js');
 
-let fetchRandomCities = () => {
+
+let fetchRandomCities = (num) => {
   let cities = [];
   let weatherList = [];
-  while(weatherList.length != 10){
+  while(weatherList.length < num){
     let citiCounter = 0;
     let lat = (Math.random() * 180.0) - 90;
     let lon = (Math.random() * 360.0) - 180;
-    let url = util.contructUrlWithLatAndLon(lat, lon);
+    let url = util.contructUrlWithLatAndLon(lat, lon, num);
 
     let weatherJson = JSON.parse(request('GET', url).body);
     weatherList = weatherJson.list;
@@ -26,7 +27,7 @@ let fetchRandomCities = () => {
 
 let fetchCityByName = (cityName) => {
   let url = util.constructUrlWithCityName(cityName);
-  let weatherJson = JSON.parse(request('GET', url).body)
+  let weatherJson = JSON.parse(request('GET', url).body);
   if(weatherJson.cod === '404'){
     return {cod: '404', wether: '' };
   }

@@ -16,6 +16,7 @@
     "mongodb": "^3.2.2",
     "request": "^2.88.0",
     "simple-node-logger": "^18.12.22",
-    "sync-request": "^6.1.0"
+    "sync-request": "^6.1.0",
+    "utf8": "^3.0.0"
   }
 }

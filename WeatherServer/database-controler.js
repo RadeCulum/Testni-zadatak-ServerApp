@@ -5,17 +5,15 @@ const properties = require('./properties');
 
 const dbUrl = properties.databaserUrl;
 
-let insertCitiesIfDatabaseDoesEmty = async () => {
+let insertCitiesIfDatabaseDoesEmpty = async () => {
   let client = await MongoClient.connect(dbUrl, { useNewUrlParser: true });
   let db = await client.db();
   let counter = await db.collection('cities').countDocuments();
 
   if(!counter){
-    cities = dataFetcher.fetchRandomCities();
-    cities.forEach((citi) => {
-      db.collection("cities").insertOne(citi, (err, res)=> {
-        if (err) throw err;
-      });
+    cities = dataFetcher.fetchRandomCities(10);
+    db.collection("cities").insertMany(cities, (err, res)=> {
+      if (err) { console.log(err) };
     });
   }
   client.close();
@@ -38,30 +36,50 @@ let addCity = async (city) => {
   let db = await client.db();
   db.collection("cities").insertOne(city, (err, res) => {
     if (err) {
-      throw err;
+      console.log(err);
     }
   });
+  client.close();
+}
+
+let changeRow = async (element) => {
+  let client = await MongoClient.connect(dbUrl, { useNewUrlParser: true });
+  let db = await client.db();
+  let rndCities = dataFetcher.fetchRandomCities(1);
+
+  await db.collection('cities').updateOne(element, { $set: rndCities[0] }, (err, res)=> {
+    if (err) { console.log(err); }
+  });
+
   client.close();
 }
 
 let updateDatabase = async ()=> {
   let client = await MongoClient.connect(dbUrl, { useNewUrlParser: true });
   let db = await client.db();
+
   let cities = [];
   let cursor = await db.collection('cities').find({});
+
   await cursor.forEach(async (element, err)=> {
-    let currentValue = { city : element.city };
-    let newDocument = await dataFetcher.fetchCityByName(element.city);
-    db.collection('cities').updateOne(element, { $set: newDocument.weather }, (err, res)=> {
-      if (err){
-        throw err;
-      }
-    })
+    try{
+      let currentValue = { city : element.city };
+      let newDocument = dataFetcher.fetchCityByName(element.city);
+
+      await db.collection('cities').updateOne(element, { $set: newDocument.weather }, async (err, res)=> {
+        if (err) {
+          changeRow(element);
+         }
+      });
+
+    } catch(exc) {
+      changeRow(element);
+    }
   });
   client.close();
 }
 
-module.exports.insertCitiesIfDatabaseDoesEmty = insertCitiesIfDatabaseDoesEmty;
+module.exports.insertCitiesIfDatabaseDoesEmpty = insertCitiesIfDatabaseDoesEmpty;
 module.exports.getAllCities = getAllCities;
 module.exports.addCity = addCity;
 module.exports.updateDatabase = updateDatabase;
