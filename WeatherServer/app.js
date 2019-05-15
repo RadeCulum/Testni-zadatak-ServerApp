@@ -22,13 +22,12 @@ app.listen(port, () => {
 	databaseControler.insertCitiesIfDatabaseDoesEmpty();
 });
 
-app.get(properties.getCitiesRoute, async function(req, res, next){
+app.get(properties.getCitiesRoute, async function(req, res){
 	let cities = await databaseControler.getAllCities();
 	res.status(200).json(cities);
-	next();
 })
 
-app.post(properties.addCityRoute, async (req, res, next) => {
+app.post(properties.addCityRoute, async (req, res) => {
 	let response = dataFetcher.fetchCityByName(req.body.city);
 	if(response.cod === '404'){
 		res.status('404').json({});
@@ -37,5 +36,4 @@ app.post(properties.addCityRoute, async (req, res, next) => {
 		databaseControler.addCity(response.weather);
 		res.status(200).json(response.weather);
 	}
-	next();
 });
